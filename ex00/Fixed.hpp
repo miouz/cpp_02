@@ -4,7 +4,7 @@
 
 class Fixed
 {
-	int	fixed_;
+	int	value_;
 	static const int frac_;
 
 	public:
