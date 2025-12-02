@@ -4,7 +4,7 @@
 
 class Fixed
 {
-	int	value_;
+	int	rawBits_;
 	static const int frac_;
 
 	public:
