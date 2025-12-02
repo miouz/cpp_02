@@ -44,20 +44,20 @@ void	Fixed::setRawBits(int const rawBits)
 Fixed::Fixed(const int value)
 {
 	std::cout << "Int constructor called\n";
-	int32_t rawBits = value * (1<<8);
+	int rawBits = value * (1<<frac_);
 	setRawBits(rawBits);
 }
 
 Fixed::Fixed(const float value)
 {
 	std::cout << "Float constructor called\n";
-	int32_t rawBits = std::roundf(value * (1<<8));
+	int rawBits = roundf(value * (1<<frac_));
 	setRawBits(rawBits);
 }
 	
 float	Fixed::toFloat(void) const
 {
-	return static_cast<float>(rawBits_) / pow(2.0, frac_);
+	return static_cast<float>(rawBits_) / (1<<frac_);
 }
 
 int		Fixed::toInt(void) const
