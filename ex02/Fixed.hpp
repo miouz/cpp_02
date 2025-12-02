@@ -1,11 +1,10 @@
 #ifndef FIXED_HPP
 # define FIXED_HPP
 # include <iostream>
-# include <cstdint>
 
 class Fixed
 {
-	int32_t	rawBits_;
+	int	rawBits_;
 	static const int frac_;
 
 	public:
