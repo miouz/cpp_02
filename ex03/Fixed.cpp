@@ -1,16 +1,15 @@
 #include "Fixed.hpp"
 #include <cmath>
+#include <climits>
 #include <iostream>
 
 const int Fixed::frac_ = 8;
 
 Fixed::Fixed(void)
 {
-	rawBits_ = 0;	
+	rawBits_ = 0;
 }
-Fixed::~Fixed(void)
-{
-}
+Fixed::~Fixed(void){}
 
 Fixed::Fixed(const Fixed& other)
 {
@@ -37,19 +36,19 @@ void	Fixed::setRawBits(int const rawBits)
 
 Fixed::Fixed(const int value)
 {
-	int32_t rawBits = value * (1<<8);
+	int rawBits = value * (1<<frac_);
 	setRawBits(rawBits);
 }
 
 Fixed::Fixed(const float value)
 {
-	int32_t rawBits = std::roundf(value * (1<<8));
+	int rawBits = roundf(value * (1<<frac_));
 	setRawBits(rawBits);
 }
 	
 float	Fixed::toFloat(void) const
 {
-	return static_cast<float>(rawBits_) /(1<<8);
+	return static_cast<float>(rawBits_) /(1<<frac_);
 }
 
 int		Fixed::toInt(void) const
@@ -112,9 +111,12 @@ Fixed	Fixed::operator*(const Fixed& other)const
 	long temp;
 	Fixed result;
 
-	//for overflow protection
+	//for multiply overflow protection
 	temp = static_cast<long>(this->rawBits_) * static_cast<long>(other.getRawBits());
-	result.setRawBits(static_cast<int32_t>(temp / (1<<8)));
+	temp = temp / (1<<frac_);
+	if (temp > INT_MAX || temp < INT_MIN)
+		std::cerr<< "operator * causes overflow, result incorrect\n";
+	result.setRawBits(static_cast<int32_t>(temp));
 	return result;
 }
 
@@ -124,8 +126,11 @@ Fixed	Fixed::operator/(const Fixed& other)const
 	Fixed result;
 
 	//for multiply overflow protection
-	temp = static_cast<long>(this->rawBits_ * (1<<8));
-	result.setRawBits(static_cast<int32_t>(temp / other.getRawBits()));
+	temp = static_cast<long>(this->rawBits_) * (1<<frac_);
+	temp = temp / other.getRawBits();
+	if (temp > INT_MAX || temp < INT_MIN)
+		std::cerr<< "operator / causes overflow, result incorrect\n";
+	result.setRawBits(static_cast<int32_t>(temp));
 	return result;
 }
 
